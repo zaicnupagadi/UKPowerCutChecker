@@ -12,7 +12,7 @@
 RootModule = 'UKPowerCutChecker.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.0'
+ModuleVersion = '1.0.2'
 
 # ID used to uniquely identify this module
 GUID = '479b6be0-a82e-4b7a-8300-72bc0b5d2068'
