@@ -3,20 +3,26 @@ Function Get-WebRequestTable {
 param(
 
     [Parameter(Mandatory = $true)]
-
-    [Microsoft.PowerShell.Commands.HtmlWebResponseObject] $WebRequest,
-
-   
-
+    [String] $WebSite,
+     
     [Parameter(Mandatory = $true)]
+    [int] $TableNumber,
 
-    [int] $TableNumber
-
+    [Parameter(Mandatory = $false)]
+    [switch] $IeExperience
 )
 
 ## Extract the tables out of the web request
-
+If ($IeExperience) {
+$ie = new-object -ComObject "InternetExplorer.Application"
+$ie.navigate($WebSite)
+Start-Sleep 10
+$doc = $ie.Document.body
+$tables = @($doc.getElementsByTagName('TABLE'))
+} else {
+$WebRequest = Invoke-WebRequest $WebSite
 $tables = @($WebRequest.ParsedHtml.getElementsByTagName("TABLE"))
+}
 
 $table = $tables[$TableNumber]
 
@@ -82,5 +88,8 @@ foreach($row in $rows)
 
     [PSCustomObject] $resultObject
 
-} 
+}
+if ($ie){
+$ie.Quit()
+}
 }

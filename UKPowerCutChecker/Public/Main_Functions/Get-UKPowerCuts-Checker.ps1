@@ -13,21 +13,23 @@ $prog = [regex]::match($b,'#([^#]+)#')
 
 $PowerSupplier = $prog.Groups[1].Value
 if (!($ViewAll)){
-switch ($PowerSupplier) 
+    $params = @{
+    PostCode = $PostCode
+    }
+} else {
+    $params = @{
+    PostCode = $PostCode
+    ViewAll  = $ViewAll
+    }
+}
+Write-Verbose "Your power supplier is $PowerSupplier"
+switch ($PowerSupplier)
     { 
         "Postcode not found" {"Error while checking the postcode"} 
-        "Western Power Distribution" {Get-UKPowerCuts-WesternPower $PostCode}  
+        "Western Power Distribution" {Get-UKPowerCuts-WesternPower @params}
+        "UK Power Networks" {Get-UKPowerCuts-UKPowerNetworks @params}
         default {"The color could not be determined."}
     }
-    } else {
-       
-switch ($PowerSupplier) 
-    { 
-        "Postcode not found" {"Error while checking the postcode"} 
-        "Western Power Distribution" {Get-UKPowerCuts-WesternPower $PostCode $ViewAll}  
-        default {"The color could not be determined."}
-    } 
-    
-    }
+
     
 }

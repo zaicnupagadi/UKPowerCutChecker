@@ -1,4 +1,4 @@
-﻿function Get-UKPowerCuts-WesternPower {
+﻿function Get-UKPowerCuts-UKPowerNetworks {
 
 Param (
 #[ValidatePattern("^([a-zA-Z]){1}([0-9][0-9]|[0-9]|[a-zA-Z][0-9][a-zA-Z]|[a-zA-Z][0-9][0-9]|[a-zA-Z][0-9]){1}([ ])([0-9][a-zA-z][a-zA-z]){1}$")] $PostCode
@@ -6,22 +6,26 @@ Param (
 [bool]$ViewAll
 )
 
-$WebSite = ('https://www.westernpower.co.uk/Power-outages/Power-cuts-in-your-area/Power-Cut-outages-list.aspx')
+#$postcode = "e14 4qr"
+#$ViewAll = $true
+
+$WebSite = "http://www.ukpowernetworks.co.uk/internet/en/power-cuts/list-of-powercuts/"
+$Table = (Get-WebRequestTable $WebSite -TableNumber 0 -IeExperience)
 $AllObjects = @()
 
-$Table = (Get-WebRequestTable $WebSite -TableNumber 0)
 ForEach ($f in $TAble) {
-$c = ($f.'Areas Affected').replace(" ","")
+if ($f.'Potentially affected postcodes'){
+$c = ($f.'Potentially affected postcodes').replace(" ","")
 $d = $Postcode.replace(" ","")
 
-    if ($f.'Areas Affected' -match ","){
-    $ff = $f.'Areas Affected' -split(",")
+    if ($f.'Potentially affected postcodes' -match ","){
+    $ff = $f.'Potentially affected postcodes' -split(",")
     ForEach ($fff in $ff) {
     $obj = [PSCustomObject]@{
     AreasAffected = $fff
-    TimeofIncident = $f.'Time of Incident'
-    NumberPropertiesWithoutPower = $f.'Number properties without power'
-    EstimatedRestorationTime = $f.'Estimated Restoration Time'
+    TimeofIncident = $f.'This power cut was reported at'
+    EstimatedRestorationTime = $f.'Estimated time for power to be restored'
+    ReferenceNumber = $f.'Reference number'
     }
     $g = $fff.replace(" ","")
     if ($ViewAll -eq "True"){
@@ -34,10 +38,10 @@ $d = $Postcode.replace(" ","")
     }
     } else {
     $obj = [PSCustomObject]@{
-    AreasAffected = $f.'Areas Affected'
-    TimeofIncident = $f.'Time of Incident'
-    NumberPropertiesWithoutPower = $f.'Number properties without power'
-    EstimatedRestorationTime = $f.'Estimated Restoration Time'
+    AreasAffected = $f.'Potentially affected postcodes'
+    TimeofIncident = $f.'This power cut was reported at'
+    EstimatedRestorationTime = $f.'Estimated time for power to be restored'
+    ReferenceNumber = $f.'Reference number'
     }
     if ($ViewAll -eq "True"){
     $AllObjects += $obj
@@ -49,6 +53,8 @@ $d = $Postcode.replace(" ","")
 
 }
 }
-$AllObjects
 }
+$AllObjects
 
+
+}
