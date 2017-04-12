@@ -22,7 +22,7 @@ if (!($ViewAll)){
     ViewAll  = $ViewAll
     }
 }
-Write-Verbose "Your power supplier is $PowerSupplier"
+
 switch ($PowerSupplier)
     { 
         "Postcode not found" {"Error while checking the postcode"} 

@@ -6,8 +6,6 @@ Param (
 [bool]$ViewAll
 )
 
-#$postcode = "e14 4qr"
-#$ViewAll = $true
 
 $WebSite = "http://www.ukpowernetworks.co.uk/internet/en/power-cuts/list-of-powercuts/"
 $Table = (Get-WebRequestTable $WebSite -TableNumber 0 -IeExperience)
@@ -55,6 +53,4 @@ $d = $Postcode.replace(" ","")
 }
 }
 $AllObjects
-
-
 }
