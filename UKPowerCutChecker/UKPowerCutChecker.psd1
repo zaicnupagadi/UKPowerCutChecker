@@ -27,7 +27,7 @@ CompanyName = 'Unknown'
 Copyright = '(c) 2017 Pawel Jarosz. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Module for checking Power cuts in UK'
+Description = 'Module for checking Power cuts in the UK'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '3.0'

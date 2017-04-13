@@ -8,20 +8,19 @@ param(
     [Parameter(Mandatory = $true)]
     [int] $TableNumber,
 
-    [Parameter(Mandatory = $false)]
     [switch] $IeExperience
 )
 
 ## Extract the tables out of the web request
 If ($IeExperience) {
-$ie = new-object -ComObject "InternetExplorer.Application"
-$ie.navigate($WebSite)
-Start-Sleep 10
-$doc = $ie.Document.body
-$tables = @($doc.getElementsByTagName('TABLE'))
+  $ie = new-object -ComObject "InternetExplorer.Application"
+  $ie.navigate($WebSite)
+  while($ie.busy) {Start-Sleep 1}
+  $doc = $ie.Document.body
+  $tables = @($doc.getElementsByTagName('TABLE'))
 } else {
-$WebRequest = Invoke-WebRequest $WebSite
-$tables = @($WebRequest.ParsedHtml.getElementsByTagName("TABLE"))
+  $WebRequest = Invoke-WebRequest $WebSite
+  $tables = @($WebRequest.ParsedHtml.getElementsByTagName("TABLE"))
 }
 
 $table = $tables[$TableNumber]
@@ -46,7 +45,7 @@ foreach($row in $rows)
 
     {
 
-        $titles = @($cells | % { ("" + $_.InnerText).Trim() })
+        $titles = @($cells | ForEach-Object { ("" + $_.InnerText).Trim() })
 
         continue
 
@@ -58,7 +57,7 @@ foreach($row in $rows)
 
     {
 
-        $titles = @(1..($cells.Count + 2) | % { "P$_" })
+        $titles = @(1..($cells.Count + 2) | ForEach-Object { "P$_" })
 
     }
 
