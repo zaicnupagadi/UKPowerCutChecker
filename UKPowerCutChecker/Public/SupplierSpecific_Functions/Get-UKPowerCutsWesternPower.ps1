@@ -8,7 +8,6 @@
 
   $WebSite = ('https://www.westernpower.co.uk/Power-outages/Power-cuts-in-your-area/Power-Cut-outages-list.aspx')
   $AllObjects = @()
-
   $Table = (Get-WebRequestTable $WebSite -TableNumber 0)
   ForEach ($f in $TAble) {
     $c = ($f.'Areas Affected').replace(" ","")
@@ -49,6 +48,12 @@
 
     }
   }
+  
+  If ($AllObjects.count -eq 0) {
+  Write-Output "There are no power cuts for your area."
+  } else {
+  Write-Output "There are power cuts for your area".
   $AllObjects
+  }
 }
 

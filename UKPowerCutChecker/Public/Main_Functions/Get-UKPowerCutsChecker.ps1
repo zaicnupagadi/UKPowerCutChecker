@@ -66,6 +66,7 @@
     "Postcode not found" {"Postcode not found"} 
     "Western Power Distribution" {Get-UKPowerCutsWesternPower @params}
     "UK Power Networks" {Get-UKPowerCutsUKPowerNetworks @params}
+    "SP Energy Networks" {Get-UKPowerCutsSPEnergyNetworks @params}
     default {"Power supplier couldn't be identified - please report the problem to the Author."}
   }
 

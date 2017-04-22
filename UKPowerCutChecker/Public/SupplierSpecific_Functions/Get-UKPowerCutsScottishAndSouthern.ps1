@@ -5,12 +5,7 @@
 )#>
 $AllObjects = @()
 $rows= @()
-$r = @()
-$a = @()
-$s = @()
 $WebSite = ('https://www.ssepd.co.uk/Powertrack/')
-
-
 $WebRequest = Invoke-WebRequest $WebSite 
 
 $divs = $WebRequest.ParsedHtml.body.getElementsByTagName('div') | 
@@ -25,13 +20,14 @@ $rows  = $divs.getElementsByClassName('accordion-group')
 #$r[0].getElementsByTagName('P') | ft innerhtml
 
 ForEach ($row in $rows) {
-#$r = $row.getElementsByClassName('content clearfix')
-    #ForEach ($s in $r) {
-    
-    $row.getElementsByTagName('P') | ft innerhtml
-    
-    #}
 
-#$row.getElementsByClassName('affected-areas row')
+$MaxPElements = ($row.getElementsByTagName('P') | ? {$_.outerhtml -match "content"} | measure).count
+
+    For ($i=0; $i -eq $MaxPElements; $i+2) {
+    $i
+    $row.getElementsByTagName('P')[$i]| ft outerhtml
+    $row.getElementsByTagName('P')[$i].nextsibling.nextsibling | ft outerhtml
+    }
+    #$titles = @($cells | ForEach-Object { ("" + $_.InnerText).Trim() })
 }
 
