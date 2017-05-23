@@ -34,6 +34,7 @@
       PowerShellGallery: https://www.powershellgallery.com/packages/ukpowercutchecker
 
       Change Log
+      V1.0.3, 23/05/2017 - Still dirty as hell but added ScottishAndSouthern supplier
       V1.0.2, 13/04/2017 - Version with two power suppliers, creating proper function for ScottishAndSouthern.
       V1.0.1, 11/04/2017 - Initial version, dity and full of bugs :)
   #>
@@ -67,6 +68,7 @@
     "Western Power Distribution" {Get-UKPowerCutsWesternPower @params}
     "UK Power Networks" {Get-UKPowerCutsUKPowerNetworks @params}
     "SP Energy Networks" {Get-UKPowerCutsSPEnergyNetworks @params}
+    "Scottish and Southern Electricity Networks" {Get-UKPowerCutsScottishAndSouthern @params}
     default {"Power supplier couldn't be identified - please report the problem to the Author."}
   }
 
