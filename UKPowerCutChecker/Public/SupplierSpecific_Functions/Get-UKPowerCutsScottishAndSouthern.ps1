@@ -84,4 +84,5 @@
 
 }  
 
-Get-UKPowerCutsScottishAndSouthern -PostCode "sl8 5ee" -ViewAll
+#Get-UKPowerCutsChecker -PostCode "sl8 5ee" -ViewAll
+#Get-UKPowerCutsScottishAndSouthern -PostCode "sl8 5ee" -ViewAll
