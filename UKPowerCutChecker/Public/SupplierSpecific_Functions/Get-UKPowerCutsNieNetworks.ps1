@@ -5,11 +5,18 @@
 
     [bool]$ViewAll
   )
+ $AllObjects = @()
 
-  $WebSite = ('https://www.westernpower.co.uk/Power-outages/Power-cuts-in-your-area/Power-Cut-outages-list.aspx')
-  $AllObjects = @()
-  $Table = (Get-WebRequestTable $WebSite -TableNumber 0)
-  ForEach ($f in $TAble) {
+  $WebSite = ('https://powercheck.nienetworks.co.uk/TabularFaults.html')
+  $ie = new-object -ComObject "InternetExplorer.Application"
+  $ie.navigate($WebSite)
+  while($ie.busy) {Start-Sleep 1}
+  $doc = $ie.Document.body
+  $tables = @($doc.getElementsByTagName('TABLE'))
+
+
+  #$Table = (Get-WebRequestTable $WebSite -TableNumber 0 -IeExperience)
+  ForEach ($f in $Table) {
     $c = ($f.'Areas Affected').replace(" ","")
     $d = $Postcode.replace(" ","")
 
@@ -48,12 +55,6 @@
 
     }
   }
-  
-  If ($AllObjects.count -eq 0) {
-  Write-Output "There are no power cuts for your area."
-  } else {
-  Write-Output "There are power cuts for your area".
   $AllObjects
-  }
 }
 
