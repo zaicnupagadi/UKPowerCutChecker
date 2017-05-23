@@ -4,35 +4,52 @@
 [bool]$ViewAll
 )#>
 $AllObjects = @()
+$FinalObject = @()
 $object = @{}
-$obiekt  = @{}
+$obiekt = @{}
 $props = @{}
+$props2 = @{}
 $WebSite = ('https://www.ssepd.co.uk/Powertrack/')
 $WebRequest = Invoke-WebRequest $WebSite 
 
 $divs = $WebRequest.ParsedHtml.body.getElementsByTagName('div') | 
     Where-Object {$_.getAttributeNode('class').Value -eq 'power-track-summary clearfix'}
-$rows  = $divs.getElementsByClassName('accordion-group')
+$rows = $divs.getElementsByClassName('accordion-group')
 
 
 ForEach ($row in $rows) {
-$props = @{}
-$c = @()
-$MaxPElements = ($row.getElementsByTagName('P') | ? {$_.outerhtml -match "content"} | measure).count
-    For ($i=0; $i -lt $MaxPElements ; $i+=2) {
-    $PropName = $row.getElementsByTagName('P')[$i].outertext.Replace(' ','')
-    $PropValue = $row.getElementsByTagName('P')[$i].nextsibling.nextsibling.outertext
-    $props += @{"$PropName" = "$PropValue"}
+    $props = @{}
+    $c = @()
+    $MaxPElements = ($row.getElementsByTagName('P') | ? {$_.outerhtml -match "content"} | measure).count
+    For ($i = 0; $i -lt $MaxPElements ; $i += 2) {
+        $PropName = $row.getElementsByTagName('P')[$i].outertext.Replace(' ', '')
+        $PropValue = $row.getElementsByTagName('P')[$i].nextsibling.nextsibling.outertext
+        $props += @{"$PropName" = "$PropValue"}
     }
     $e = $row.getElementsByClassName('affected-areas row')
     $codes = $e[0].getElementsByClassName('col-xs-12 col-sm-3 col-md-2')
-    ForEach ($code in $codes) { $c += $code.innertext.trim()+"," }
+    ForEach ($code in $codes) { $c += $code.innertext.trim() + "," }
     $props += @{"AffectedPostCodes" = $c.trimend(',')}
     $object = new-object psobject -Property $props
     $AllObjects += $object
 }
 $AllObjects | select -Property Faultreference, * -ErrorAction SilentlyContinue
 
+ForEach ($o in $AllObjects) {
+    ForEach ($k in $o) {
+        #$k.psobject.Properties.name
+        #$k.AffectedPostCodes
+        ForEach ($p in $k.psobject.Properties) {
+            if ($p -notmatch "AffectedPostCodes") {
+            $props2 += @{$p.name = $p.value}
+            $object2 = new-object psobject -Property $props2
+        }
+    }
+        
+    $FinalObject += $object2
+}    
+}
+$FinalObject
 
 <#
 [string] $a = (($AllObjects | gm -MemberType noteproperty).name | ? {$_ -ne "FaultReference"})
