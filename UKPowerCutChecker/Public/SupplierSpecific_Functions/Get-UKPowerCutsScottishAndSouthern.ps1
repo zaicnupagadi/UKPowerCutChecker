@@ -69,5 +69,16 @@
 
     #$FinalObject | ft -Property *
     $uni = $Allproperties | select -Unique
-    $FinalObject | select $uni
+    #$FinalObject | select $uni
+    If ($FinalObject.count -eq 0 -and !$viewall) {
+        Write-Output "There are no power cuts for your area."
+    }
+    elseif ($FinalObject.count -ne 0 -and !$viewall) {
+        Write-Output "There are power cuts for your area."
+        $FinalObject 
+    }
+    else {
+        $FinalObject
+    }
+
 }  
